@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head lang = "zh-cn">
+  <meta charset = "UTF-8">
+  <title>helloVue</title>
+  <style>
+    header{
+      margin-top: 30px;
+      font-family: '微软雅黑', 'Microsoft YaHei', Helvetica, STHeiTi, Sans-serif;
+      font-weight: bold;
+      font-size: 24px;
+      color: #222;
+    }
+  </style>
+  <script src="js/vue.js"></script>
+</head>
+<body>
+  <!-- Hello World -->
+  <header>Hello World</header>
+  <ul id="hello-world">
+    {{ message }}<li v-for="todo in todos">{{ todo.text }}</li>
+  </ul>
+
+  <script>
+    new Vue({
+      el: '#hello-world',
+      data: {
+        message: 'Hello Vue.js!',
+        todos: [
+          { text: 'Learn JavaScript' },
+          { text: 'Learn Vue.js' },
+          { text: 'Build Something Awesome' }
+        ]
+      }
+    })
+  </script>
+
+
+
+  <!-- 双向绑定 -->
+  <header>双向绑定</header>
+  <div id="app">
+    <p>{{ message }}</p><input v-model="message">
+  </div>
+
+  <script>
+    new Vue({
+      el: '#app', data: { message: 'Hello Vue.js!' }
+    })
+  </script>
+
+
+
+  <!-- 处理用户输入 -->
+  <header>处理用户输入</header>
+  <div id="button">
+    <p>{{ message }}</p>
+    <button v-on:click="reverseMessage">Reverse Message</button>
+  </div>
+  <script>
+    new Vue({
+      el: '#button',
+      data: {
+        message: 'Hello Vue.js!'
+      },
+      methods: {
+        reverseMessage: function () {
+          this.message = this.message.split('').reverse().join('')
+        }
+      }
+    })
+  </script>
+
+
+
+  <!-- Todos -->
+  <header>Todos</header>
+  <div id="todos">
+    <input v-model="newTodo" v-on:keyup.enter="addTodo">
+    <ul>
+      <li v-for="todo in todos">
+        <span>{{ todo.text }}</span>
+        <button v-on:click="removeTodo($index)">X</button>
+      </li>
+    </ul>
+  </div>
+  <script>
+    new Vue({
+      el: '#todos',
+      data: {
+        newTodo: '',
+        todos: [
+          { text: 'Add some todos' }
+        ]
+      },
+      methods: {
+        addTodo: function () {
+          var text = this.newTodo.trim();
+          if (text) {
+            this.todos.push({ text: text });
+            this.newTodo = ''
+          }
+        },
+        removeTodo: function (index) {
+          this.todos.splice(index, 1)
+        }
+      }
+    })
+  </script>
+</body>
+</html>
