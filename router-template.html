@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+<head>
+  <title>路由范例</title>
+  <!--#include file="head.html"-->
+  <style>
+    /* 动画 */
+    .fade-transition { transition: all .3s ease; opacity: 1; }
+    .fade-enter, .fade-leave { opacity: 0; }
+  </style>
+</head>
+<body>
+  <!-- <header>---menu---menu---menu---</header> -->
+  <router-view transition="fade" transition-mode="out-in" keep-alive></router-view>
+
+
+  <!-- Home页 -->
+  <script type="text/x-template" id="template-home">
+    <article title="Home">
+      <header>Home</header>
+      <a v-link="'/one'">Go to One</a>
+      <a v-link="{ path: '/two' }">Go to Two</a>
+    </article>
+  </script>
+
+  <!-- One页 -->
+  <script type="text/x-template" id="template-one">
+    <article title="One">
+      <header>One</header>
+    </article>
+  </script>
+
+  <!-- Two页 -->
+  <script type="text/x-template" id="template-two">
+    <article title="Two">
+      <header>Two</header>
+    </article>
+  </script>
+
+  <!--#include file="foot-new.html"-->
+  <script>
+    // 全局过滤器
+    Vue.filter('global', function(str) {
+      return "global:" + str;
+    });
+
+    // 首页组件
+    var Home = Vue.extend({
+      template: '#template-home',
+      route: {
+        data: function() {
+          ddb.setTitle(this.$el.title);
+        },
+        activate: function() {
+          console.log('activate');
+        },
+        deactivate: function() {
+          console.log('deactivate');
+        }
+      },
+
+      data: function() {
+        return {};
+      },
+
+      created: function() {
+
+      },
+
+      methods: {
+
+      }
+    });
+
+    // One页组件
+    var One = Vue.extend({
+      template: '#template-one',
+      route: {
+        data: function() { ddb.setTitle(this.$el.title); }
+      }
+    });
+
+    // Two页组件
+    var Two = Vue.extend({
+      template: '#template-two',
+      route: {
+        data: function() { ddb.setTitle(this.$el.title); }
+      }
+    });
+
+    // 构建一个根组件：路由器需要一个根组件
+    var App = Vue.extend();
+
+    // 创建一个路由器实例
+    var router = new VueRouter({
+      // hashbang: false,
+      // history: true,
+      // root: '/webapp/router-template/',
+      // saveScrollPosition: true
+    });
+
+    // 定义路由映射，每条路由规则映射到一个组件
+    router.map({
+      '/home': { // 访问地址
+        component: Home // 引用的组件名称
+      },
+      '/one': {
+        component: One
+      },
+      '/two': {
+        component: Two
+      }
+    });
+
+    // 切换页面时滚动到顶部
+    // router.beforeEach(function () {
+    //   window.scrollTo(0, 0);
+    // });
+
+    // 定义全局的重定向规则，全局的重定向会在匹配当前路径之前执行
+    router.redirect({
+      '*': '/home' // 重定向任意未匹配路径到 /home
+    });
+
+    // 启动应用：路由器会创建一个 app 实例，并且挂载到选择符匹配的元素上
+    router.start(App, 'body');
+  </script>
+</body>
+</html>
